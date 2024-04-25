@@ -29,3 +29,5 @@ end
 
 
 gem "tailwindcss-rails", "~> 2.4"
+
+gem 'vite_rails', "3.0.16"
