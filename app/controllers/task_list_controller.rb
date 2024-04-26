@@ -1,4 +1,4 @@
-class TaskController < ApplicationController
+class TaskListController < ApplicationController
   def create
   end
 
