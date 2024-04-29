@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [
     RubyPlugin(),
     vue({
+
       template: {
         compilerOptions: {
           isCustomElement: tag => tag.startsWith('app-')

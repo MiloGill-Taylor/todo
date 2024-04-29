@@ -1,5 +1,15 @@
-<div id="app-vue-entry">
-    <button class="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-600 hover:to-blue-800 text-white font-bold py-2 px-4 rounded" @click="buttonPress">
+<div id="app-vue-entry" class="w-screen h-screen">
+    <%
+=begin%>
+ <button class="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-600 hover:to-blue-800 text-white font-bold py-2 px-4 rounded" @click="buttonPress">
         Create new list
     </button>
+<%
+=end%>
+
+    <task
+        name="This is a stupidly long name to see what happens.  Ya know"
+        description="this is the description"
+        status="complete"
+    />
 </div>
