@@ -1,32 +1,22 @@
 <script setup>
-  import { computed } from 'vue'
-  // props
+  import { computed, ref } from 'vue'
+
+  // Props
 const props = defineProps({
-    name: {
-      type: String,
-
-      required: true
-    },
-    description: {
-      type: String,
-
-      required: false
-    },
-    status: {
-      type: String,
-
-      required: true
-    },
-    id: {
-      type: Number,
+    task: {
+      type: Object,
 
       required: true
     }
   })
 
-  // Emits
+  // Refs
+  const name = ref(props.task.name)
+  const description = ref(props.task.description);
+  const status = ref(props.task.status);
 
-  const emit = defineEmits(['updateTaskName', 'updateTaskDescription', 'updateTaskStatus'])
+  // Emits
+  const emit = defineEmits(['deleteTask'])
 
   // computed
   const statusCss = computed(() => {
@@ -37,9 +27,9 @@ const props = defineProps({
       self-center
       rounded-full `
 
-    if (props.status === "unstarted") {
+    if (status.value === "unstarted") {
       return baseCss
-    } else if (props.status === "in_progress") {
+    } else if (status.value === "in_progress") {
       return baseCss + "bg-yellow-400"
     } else {
       return baseCss + "bg-green-600"
@@ -48,13 +38,13 @@ const props = defineProps({
 
   const buttons = computed(() => {
     let baseCss = 'text-white text-sm font-bold mb-1 mx-2 rounded'
-    if (props.status === "unstarted") {
+    if (status.value === "unstarted") {
       return [
         { class: baseCss + ' bg-yellow-400', text: 'Start'},
         { class: baseCss + ' bg-green-500', text: 'Done' },
         { class: baseCss + ' bg-red-300', text: 'Delete'}
       ]
-    } else if (props.status === "in_progress") {
+    } else if (status.value === "in_progress") {
       return [
         { class: baseCss + ' bg-red-500', text: 'Unstart'},
         { class: baseCss + ' bg-green-500', text: 'Complete' },
@@ -67,49 +57,22 @@ const props = defineProps({
     }
   })
 
-  const taskName = computed({
-    get() {
-      return props.name
-    },
-    set(newName){
-      emit('updateTaskName', newName, props.id);
-    }
-  })
-
-  const taskDescription = computed({
-    get() {
-      return props.description
-    },
-    set(newDescription){
-      emit('updateDescription', newDescription, props.id);
-    }
-  })
-
-  const taskStatus= computed({
-    get() {
-      return props.status
-    },
-    set(newStatus){
-      emit('updateTaskStatus', newStatus, props.id);
-    }
-  })
-
   // methods
 
   function buttonClick(button) {
     switch(button.text){
       case 'Start':
-        taskStatus.value = 'in_progress'
+        status.value = 'in_progress'
         break;
       case 'Done':
       case 'Complete':
-        taskStatus.value = 'completed'
+        status.value = 'completed'
         break;
       case 'Unstart':
-        taskStatus.value = 'unstarted'
+        status.value = 'unstarted'
         break;
       case 'Delete':
-        // To implement
+        emit('deleteTask', props.task.id)
         break;
     }
   }
@@ -137,7 +100,7 @@ const props = defineProps({
         px-1
         font-medium
         focus:ring-0"
-      v-model="taskName"
+      v-model="name"
     />
     <div :class="statusCss"></div>
 
@@ -151,6 +114,7 @@ const props = defineProps({
         py-0
         px-1
         focus:ring-0"
+        v-model="description"
     />
 
     <button v-for="button in buttons" :class="button.class" @click="buttonClick(button)">{{ button.text }}</button>

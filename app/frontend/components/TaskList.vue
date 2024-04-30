@@ -17,24 +17,8 @@
 
   const localTasks = ref(props.tasks);
 
-  function updateTaskName(newName, id) {
-    updateTaskProperty('name', newName, id)
-  }
-
-  function updateTaskDescription(newDescription, id) {
-    updateTaskProperty('description', newDescription, id)
-  }
-
-  function updateTaskStatus(newStatus, id) {
-    updateTaskProperty('status', newStatus, id)
-  }
-
-  function updateTaskProperty(property, newValue, id) {
-    localTasks.value.forEach((task, index, tasks) => {
-      if (task.id === id) {
-        tasks[index][property] = newValue
-      }
-    })
+  function deleteTask(taskID) {
+    localTasks.value = localTasks.value.filter(task => task.id != taskID)
   }
 </script>
 
@@ -52,13 +36,9 @@
     <h1> {{ name }}</h1>
 
     <Task v-for="task in localTasks"
-      :name="task.name"
-      :description="task.description"
-      :status="task.status"
-      :id="task.id"
-      @updateTaskName="updateTaskName"
-      @updateTaskDescription="updateTaskDescription"
-      @updateTaskStatus="updateTaskStatus"
+      :task="task"
+      :key="task.id"
+      @deleteTask="deleteTask"
       />
   </div>
 </template>
