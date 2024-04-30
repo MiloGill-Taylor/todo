@@ -1,7 +1,7 @@
 <script setup>
-  import { ref, computed } from 'vue'
+  import { computed } from 'vue'
   // props
-  const props = defineProps({
+const props = defineProps({
     name: {
       type: String,
 
@@ -16,8 +16,17 @@
       type: String,
 
       required: true
+    },
+    id: {
+      type: Number,
+
+      required: true
     }
   })
+
+  // Emits
+
+  const emit = defineEmits(['updateTaskName', 'updateTaskDescription', 'updateTaskStatus'])
 
   // computed
   const statusCss = computed(() => {
@@ -36,6 +45,74 @@
       return baseCss + "bg-green-600"
     }
   })
+
+  const buttons = computed(() => {
+    let baseCss = 'text-white text-sm font-bold mb-1 mx-2 rounded'
+    if (props.status === "unstarted") {
+      return [
+        { class: baseCss + ' bg-yellow-400', text: 'Start'},
+        { class: baseCss + ' bg-green-500', text: 'Done' },
+        { class: baseCss + ' bg-red-300', text: 'Delete'}
+      ]
+    } else if (props.status === "in_progress") {
+      return [
+        { class: baseCss + ' bg-red-500', text: 'Unstart'},
+        { class: baseCss + ' bg-green-500', text: 'Complete' },
+        { class: baseCss + ' bg-red-300', text: 'Delete'}
+      ]
+    } else {
+      return [
+        { class: baseCss + ' bg-red-300 col-start-3', text: 'Delete'}
+      ]
+    }
+  })
+
+  const taskName = computed({
+    get() {
+      return props.name
+    },
+    set(newName){
+      emit('updateTaskName', newName, props.id);
+    }
+  })
+
+  const taskDescription = computed({
+    get() {
+      return props.description
+    },
+    set(newDescription){
+      emit('updateDescription', newDescription, props.id);
+    }
+  })
+
+  const taskStatus= computed({
+    get() {
+      return props.status
+    },
+    set(newStatus){
+      emit('updateTaskStatus', newStatus, props.id);
+    }
+  })
+
+  // methods
+
+  function buttonClick(button) {
+    switch(button.text){
+      case 'Start':
+        taskStatus.value = 'in_progress'
+        break;
+      case 'Done':
+      case 'Complete':
+        taskStatus.value = 'completed'
+        break;
+      case 'Unstart':
+        taskStatus.value = 'unstarted'
+        break;
+      case 'Delete':
+        // To implement
+        break;
+    }
+  }
 </script>
 
 <template>
@@ -50,104 +127,32 @@
     overflow-hidden"
   >
 
-  <input
-    type="text"
-    placeholder="Name"
-    class="
-      col-span-2
-      border-0
-      py-0
-      px-1
-      font-medium
-      focus:ring-0"
-    value="name"
-  />
-  <div :class="statusCss"></div>
+    <input
+      type="text"
+      placeholder="Name"
+      class="
+        col-span-2
+        border-0
+        py-0
+        px-1
+        font-medium
+        focus:ring-0"
+      v-model="taskName"
+    />
+    <div :class="statusCss"></div>
 
-  <input
-    type="text"
-    placeholder="Enter description"
-    class="
-      col-span-3
-      text-sm
-      border-0
-      py-0
-      px-1
-      focus:ring-0"
-  />
+    <input
+      type="text"
+      placeholder="Enter description"
+      class="
+        col-span-3
+        text-sm
+        border-0
+        py-0
+        px-1
+        focus:ring-0"
+    />
 
-  <div v-if="status === 'unstarted'" class="col-span-3 grid grid-cols-3">
-    <button class="
-      bg-yellow-400
-      text-white
-        text-sm
-        font-bold
-        mb-1
-        mx-4
-        rounded"
-    >Start</button>
-    <button class="
-      bg-green-500
-      text-white
-        text-sm
-        font-bold
-        mb-1
-        mx-4
-        rounded"
-    >Done</button>
-    <button class="
-      bg-red-300
-      text-white
-        text-sm
-        font-bold
-        mb-1
-        mx-2
-        rounded"
-    >Delete</button>
-  </div>
-  <div v-else-if="status ==='in_progress'" class="col-span-3 grid grid-cols-3">
-    <button class="
-        bg-red-500
-      text-white
-        text-sm
-        font-bold
-        mb-1
-        mx-2
-        rounded"
-    >Unstart</button>
-    <button class="
-        bg-green-500
-      text-white
-        text-sm
-        font-bold
-        mb-1
-        mx-2
-        rounded"
-    >Complete</button>
-    <button class="
-      bg-red-300
-      text-white
-        text-sm
-        font-bold
-        mb-1
-        mx-2
-        rounded"
-    >Delete</button>
-  </div>
-  <div v-else class="col-span-3 grid grid-cols-3">
-    <button class="
-        col-start-3
-        bg-red-300
-      text-white
-        text-sm
-        font-bold
-        mb-1
-        mx-2
-        rounded">Delete</button>
-  </div>
+    <button v-for="button in buttons" :class="button.class" @click="buttonClick(button)">{{ button.text }}</button>
   </div>
 </template>
-
-<style>
-
-</style>

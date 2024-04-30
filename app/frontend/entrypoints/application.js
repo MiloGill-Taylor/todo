@@ -1,29 +1,21 @@
-import { createApp, ref } from 'vue'
+import { createApp } from 'vue'
 import TaskList from '../components/TaskList.vue'
-import Task from '../components/Task.vue'
 
 document.addEventListener('DOMContentLoaded', async () => {
   const entry_element = document.getElementById("app-vue-entry")
 
-  let task = {
-    name: "Name",
-    description: "description",
-    status: "unstarted"
-  }
-
   const app = createApp({
     components: {
-      TaskList,
-      Task
+      TaskList
     },
     setup() {
-      // ref
+      const tasks = [
+        { name: "task name", description: "task description", status: "unstarted", id: 1 }
+      ]
 
       return {
-        buttonPress,
         TaskList,
-        Task,
-        createNewList
+        tasks
       }
     }
   })
