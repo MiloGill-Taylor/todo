@@ -1,5 +1,6 @@
 <script setup>
-  import { computed, ref } from 'vue'
+  import { computed, ref, watch } from 'vue'
+  import getCsrfToken from '../src/get_csrf_token'
 
   // Props
 const props = defineProps({
@@ -16,7 +17,7 @@ const props = defineProps({
   const status = ref(props.task.status);
 
   // Emits
-  const emit = defineEmits(['deleteTask'])
+  const emit = defineEmits(['deleteTask', 'updateTask'])
 
   // computed
   const statusCss = computed(() => {
@@ -59,6 +60,18 @@ const props = defineProps({
 
   // methods
 
+  async function updateTask() {
+    if (!props.task.id) { return null }
+
+    const updateTask = { name: name.value, description: description.value, status: status.value };
+
+    const response = await fetch(`/tasks/${props.task.id}`, {
+      method: 'PATCH',
+      headers: { 'X-CSRF-Token' : getCsrfToken() },
+      body: JSON.stringify(updateTask)
+    })
+  }
+
   function buttonClick(button) {
     switch(button.text){
       case 'Start':
@@ -76,6 +89,12 @@ const props = defineProps({
         break;
     }
   }
+
+  // watchers
+
+  watch(name, async () => updateTask())
+  watch(description, async () => updateTask())
+  watch(status, async () => updateTask())
 </script>
 
 <template>

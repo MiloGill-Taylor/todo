@@ -1,3 +1,5 @@
 Rails.application.routes.draw do
-  root 'application#home'
+  root 'task_lists#index'
+
+  resources :tasks
 end

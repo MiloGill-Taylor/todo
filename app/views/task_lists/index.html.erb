@@ -1,0 +1,10 @@
+<div id="app-vue-entry" class="w-screen h-screen">
+
+    <% @lists.each do |list| %>
+        <task-list
+            name="<%= list.name %>"
+            id="<%= list.id %>"
+            :tasks="<%= list.tasks.map(&:to_json) %>"
+        />
+    <% end %>
+</div>

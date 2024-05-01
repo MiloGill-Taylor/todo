@@ -19,7 +19,7 @@
 #  task_list_id  (task_list_id => task_lists.id)
 #
 class Task < ApplicationRecord
-  belong_to :task_list, optional: true
+  belongs_to :task_list, optional: true
 
   enum status: {
     unstarted: 0,

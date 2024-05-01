@@ -1,9 +1,15 @@
 <script setup>
   import Task from './Task.vue'
   import { ref } from 'vue'
+  import getCsrfToken from '../src/get_csrf_token'
 
   const props = defineProps({
     name: {
+      type: String,
+
+      required: true
+    },
+    id: {
       type: String,
 
       required: true
@@ -15,10 +21,35 @@
     }
   })
 
-  const localTasks = ref(props.tasks);
+  const localTasks = ref(props.tasks.map((task) => JSON.parse(task)));
 
-  function deleteTask(taskID) {
+  async function deleteTask(taskID) {
     localTasks.value = localTasks.value.filter(task => task.id != taskID)
+
+    const response = await fetch(`/tasks/${taskID}`, {
+      method: 'DELETE',
+      headers: { 'X-CSRF-Token' : getCsrfToken() }
+    })
+
+    if (!response.ok) { } // TODO: handle errors
+  }
+
+  async function createTask(){
+    const response = await fetch('/tasks', {
+      method: 'POST',
+      headers: { 'X-CSRF-Token' : getCsrfToken() },
+      body: JSON.stringify({ list_id: props.id }),
+    })
+
+    if (response.ok){
+      const body = await response.json()
+
+      const newTask = { id: body.id, name: undefined, status: 'unstarted' }
+
+      localTasks.value.push(newTask)
+    } else {
+      //TODO: handle errors
+    }
   }
 </script>
 
@@ -39,6 +70,8 @@
       :task="task"
       :key="task.id"
       @deleteTask="deleteTask"
-      />
+    />
+
+    <button @click="createTask">New Task</button>
   </div>
 </template>

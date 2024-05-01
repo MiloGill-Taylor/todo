@@ -32,3 +32,5 @@ gem "tailwindcss-rails", "~> 2.4"
 gem 'vite_rails', "3.0.16"
 
 gem 'annotate'
+
+gem 'pry-rails', '~> 0.3.4'
