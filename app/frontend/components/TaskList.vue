@@ -1,8 +1,9 @@
 <script setup>
   import Task from './Task.vue'
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import getCsrfToken from '../src/get_csrf_token'
 
+  // Props
   const props = defineProps({
     name: {
       type: String,
@@ -21,8 +22,10 @@
     }
   })
 
+  // Refs
   const localTasks = ref(props.tasks.map((task) => JSON.parse(task)));
 
+  // Functions
   async function deleteTask(taskID) {
     localTasks.value = localTasks.value.filter(task => task.id != taskID)
 
@@ -51,6 +54,7 @@
       //TODO: handle errors
     }
   }
+
 </script>
 
 <template>
@@ -59,7 +63,6 @@
     border-gray-100
     border
     w-64
-    h-80
     shadow-lg
     rounded-lg
     overflow-hidden"

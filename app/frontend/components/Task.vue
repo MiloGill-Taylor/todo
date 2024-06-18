@@ -79,7 +79,7 @@ const props = defineProps({
         break;
       case 'Done':
       case 'Complete':
-        status.value = 'completed'
+        status.value = 'complete'
         break;
       case 'Unstart':
         status.value = 'unstarted'
@@ -109,30 +109,32 @@ const props = defineProps({
     overflow-hidden"
   >
 
-    <input
-      type="text"
-      placeholder="Name"
+    <textarea
+      type="textarea"
+      placeholder="Task"
       class="
-        col-span-2
+        col-span-3
         border-0
-        py-0
-        px-1
+        h-8
+        p-1
         font-medium
-        focus:ring-0"
+        focus:ring-0
+        resize-none"
       v-model="name"
     />
     <div :class="statusCss"></div>
 
-    <input
-      type="text"
+    <textarea
       placeholder="Enter description"
       class="
         col-span-3
         text-sm
+        h-8
         border-0
-        py-0
-        px-1
-        focus:ring-0"
+        p-1
+        mb-1
+        focus:ring-0
+        resize-none"
         v-model="description"
     />
 
