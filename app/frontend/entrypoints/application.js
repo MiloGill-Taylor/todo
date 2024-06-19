@@ -9,14 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       TaskList
     },
     setup() {
-      const tasks = [
-        { name: "task name", description: "task description", status: "unstarted", id: 1 },
-        { name: "task name", description: "task 2", status: "unstarted", id: 2 }
-      ]
-
       return {
         TaskList,
-        tasks
       }
     }
   })
