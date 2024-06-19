@@ -5,7 +5,7 @@
 #  id           :integer          not null, primary key
 #  description  :string
 #  name         :string
-#  status       :integer          default(0)
+#  status       :integer          default("unstarted")
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  task_list_id :integer
